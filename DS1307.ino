@@ -52,13 +52,13 @@ void rtc_leHora (char *buf) {
   buf[4] = (val & 0x0F) + '0';
   buf[5] = 0;
   val = Wire.read();
-  if ((val & 0x40) == 0) {
+  if ((val & 0x40) != 0) {
     // Quem configurou para formato 12h?
     if (val & 0x20) {
       val = (val & 0x1F) + 0x12;
     }
   }
-  buf[0] = ((val & 0x10) >> 4) + '0';
+  buf[0] = ((val & 0x30) >> 4) + '0';
   buf[1] = (val & 0x0F) + '0';
   buf[2] = ':';
 }
@@ -71,7 +71,7 @@ void rtc_acerta(byte *dhAtual) {
   // Calcula o valor dos registradores
   reg[0] = ((dhAtual[10]-'0') << 4) + (dhAtual[11] - '0');
   reg[1] = ((dhAtual[8]-'0') << 4) + (dhAtual[9] - '0');
-  reg[2] = 0x40 + ((dhAtual[6]-'0') << 4) + (dhAtual[7] - '0');
+  reg[2] = ((dhAtual[6]-'0') << 4) + (dhAtual[7] - '0');
   reg[3] = 1; // ignora dia da semana
   reg[4] = ((dhAtual[0]-'0') << 4) + (dhAtual[1] - '0');
   reg[5] = ((dhAtual[2]-'0') << 4) + (dhAtual[3] - '0');
